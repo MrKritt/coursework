@@ -128,7 +128,7 @@ def Calculate_All(sequence):
 
 
 fetute_seq_type = []
-with open('raw_data\\sequences\\T6SE_Training_Pos_138.fasta') as fd:
+with open('raw_data\\sequences\\all.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
         fetute_seq_type.append(Calculate_All(sequence))
 
@@ -139,11 +139,11 @@ aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
 
 matrix = bl.BLOSUM(62)
 
-seq = list(s.parse("raw_data\\sequences\\T6SE_Training_Pos_138.fasta","fasta"))
+seq = list(s.parse("raw_data\\sequences\\all.fasta","fasta"))
 
 
 def Calculate_Blosum_2():
-    ress = [[] for i in range(138)]
+    ress = [[] for i in range(1250)]
     aa = 0
     for i in seq:
         for j in seq:
@@ -247,7 +247,7 @@ def Calculate_CTD(sequence):
 
 physico_chemical_type = []
 
-with open('raw_data\\sequences\\T6SE_Training_Pos_138.fasta') as fd:
+with open('raw_data\\sequences\\all.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
         physico_chemical_type.append(Calculate_CTD(sequence))
 
@@ -262,7 +262,7 @@ for row in physico_chemical_type:
     prepared_features[i].extend(row)
     i += 1
     
-with open("prepared_data\\train_data.csv","w") as td:
+with open("prepared_data\\train_data_all.csv","w") as td:
     csv_writer = csv.writer(td,delimiter = ",", lineterminator="\r")
     for line in prepared_features:
         csv_writer.writerow(line)
