@@ -78,9 +78,9 @@ def Calculate_CTD(sequence):
     res.extend(CalculateT(sequence))
     return res
 
-matr3 = []
+physico_chemical_type = []
 
 with open('raw_data\\sequences\\T6SE_Training_Pos_138.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
-        matr3.append(Calculate_CTD(sequence))
+        physico_chemical_type.append(Calculate_CTD(sequence))
 

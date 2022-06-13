@@ -25,21 +25,21 @@ def CalculateAAC(sequence_aac):
 
 
 def CalculateAAC_ALL(sequence):
-    result = ''
+    result = []
     X = ProteinAnalysis(sequence)
     for i in range(len(AA)):
         perent_of_amino_acid = X.get_amino_acids_percent()[AA[i]]
-        result += str(perent_of_amino_acid) + ','
+        result.append(perent_of_amino_acid)
     return result
 
 
 def CalculateDPC(sequence_dpc):
     sequence_length = len(sequence_dpc)
-    result = ''
+    result = []
     for i in AA:
         for j in AA:
             dipeptide = i + j
-            result += str(float(sequence_dpc.count(dipeptide)) / (sequence_length - 1) * 100) + ','
+            result.append((float(sequence_dpc.count(dipeptide)) / (sequence_length - 1) * 100))
     return result
 
 
@@ -58,10 +58,10 @@ def CalculateQSO1SW(proteinSequence, maxlag=30, weight=0.1, distancematrix=schna
     for i in range(maxlag):
         rightpart = rightpart + SequenceOrderNumber(proteinSequence, i + 1, distancematrix)
     AAC = CalculateAAC(proteinSequence)
-    result = ''
+    result = []
     temp = 1 + weight * rightpart
     for index, aaletter_char in enumerate(AA):
-        result += str(AAC[aaletter_char] / temp) + ','
+        result.append(AAC[aaletter_char] / temp)
 
     return result
 
@@ -70,10 +70,10 @@ def CalculateQSO2SW(proteinSequence, maxlag=30, weight=0.1, distancematrix=schna
     rightpart = []
     for i in range(maxlag):
         rightpart.append(SequenceOrderNumber(proteinSequence, i + 1, distancematrix))
-    result = ''
+    result = []
     temp = 1 + weight * sum(rightpart)
     for index in range(20, 20 + maxlag):
-        result += str(weight * rightpart[index - 20] / temp) + ','
+        result.append(weight * rightpart[index - 20] / temp)
 
     return result
 
@@ -84,10 +84,10 @@ def CalculateQSO1G(proteinSequence, maxlag: int = 30, weight: float = 0.1,
     for i in range(maxlag):
         rightpart = rightpart + SequenceOrderNumber(proteinSequence, i + 1, distancematrix)
     AAC = CalculateAAC(proteinSequence)
-    result = ''
+    result = []
     temp = 1 + weight * rightpart
     for index, aaletter_char in enumerate(AA):
-        result += str(AAC[aaletter_char] / temp) + ','
+        result.append(AAC[aaletter_char] / temp)
 
     return result
 
@@ -97,32 +97,31 @@ def CalculateQSO2G(proteinSequence, maxlag=30, weight=0.1,
     rightpart = []
     for i in range(maxlag):
         rightpart.append(SequenceOrderNumber(proteinSequence, i + 1, distancematrix))
-    result = ''
+    result = []
     temp = 1 + weight * sum(rightpart)
     for index in range(20, 20 + maxlag):
-        result += str(weight * rightpart[index - 20] / temp) + ','
+        result.append(weight * rightpart[index - 20] / temp)
 
     return result
 
 
 def CalculateQSO(sequence_qso, maxlag=30, weight=0.1):
-    result = ''
-    result += str(CalculateQSO1SW(sequence_qso, maxlag, weight, schnaider))
-    result += str(CalculateQSO2SW(sequence_qso, maxlag, weight, schnaider))
-    result += str(CalculateQSO1G(sequence_qso, maxlag, weight, grantham))
-    result += str(CalculateQSO2G(sequence_qso, maxlag, weight, grantham))
+    result = (CalculateQSO1SW(sequence_qso, maxlag, weight, schnaider))
+    result.extend(CalculateQSO2SW(sequence_qso, maxlag, weight, schnaider))
+    result.extend(CalculateQSO1G(sequence_qso, maxlag, weight, grantham))
+    result.extend(CalculateQSO2G(sequence_qso, maxlag, weight, grantham))
     return result
 
 
 def Calculate_All(sequence):
-    resultt = ''
-    resultt += str(CalculateAAC_ALL(sequence))
-    resultt += str(CalculateDPC(sequence))
-    resultt += str(CalculateQSO(sequence))
+    resultt = (CalculateAAC_ALL(sequence))
+    resultt.extend(CalculateDPC(sequence))
+    resultt.extend(CalculateQSO(sequence))
     return resultt
 
 
-matrr = []
+fetute_seq_type = []
 with open('raw_data\\sequences\\T6SE_Training_Pos_138.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
-        matrr.append(Calculate_All(sequence))
+        fetute_seq_type.append(Calculate_All(sequence))
+

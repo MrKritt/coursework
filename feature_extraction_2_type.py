@@ -1,26 +1,46 @@
 import Bio.SeqIO as s
 import blosum as bl
-from Bio.SeqIO import FastaIO
+from Bio.Align import substitution_matrices
+from Bio import Align
 
-AA = ['A', 'R', 'N', 'D', 'C', 'E', 'Q', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
-
+aligner = Align.PairwiseAligner()
+aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
 
 matrix = bl.BLOSUM(62)
 
 seq = list(s.parse("raw_data\\sequences\\T6SE_Training_Pos_138.fasta","fasta"))
 
-def Calculate_Blosum(sequence):
-    res = []
-    for i in sequence:
-        for j in sequence:
-            dipeptide = i + j
-            res.append(matrix[dipeptide])
-            
-    return res
+#def Calculate_Blosum(sequence):
+#    res = []
+#    for i in sequence:
+#        for j in sequence:
+#            dipeptide = i + j
+#            res.append(matrix[dipeptide])
+#    return res
 
-matrr= []
-with open('raw_data\\sequences\\T6SE_Training_Pos_138.fasta') as fd:
-    for name, sequence in FastaIO.SimpleFastaParser(fd):
-        matrr.append(Calculate_Blosum(sequence))
+ress = [[] for i in range(138)]
+def Calculate_Blosum_2():
+    aa = 0
+    for i in seq:
+        for j in seq:
+            alignments = aligner.align(i.seq, j.seq)
+            alignment = alignments[0]
+            print("Score = %.1f" % alignment.score)
+            ress[aa].append(alignment.score)
+        aa += 1
+    return ress
 
-print(matrr)
+feture_evolv_type = Calculate_Blosum_2()
+
+pssm_matr = []
+with open("raw_data\\all_sorted_pssm_prof.csv") as pssm:
+    lis1 = [line.split(",") for line in pssm]
+    for elem in lis1:
+        elem = [float(x) for x in elem]
+        pssm_matr.append(elem)
+
+i = 0
+for row in pssm_matr:
+    feture_evolv_type[i].extend(row)
+    i+=1
+
