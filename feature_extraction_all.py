@@ -128,7 +128,7 @@ def Calculate_All(sequence):
 
 
 fetute_seq_type = []
-with open('raw_data\\sequences\\all.fasta') as fd:
+with open('raw_data\\sequences\\T6SE_Training_Neg_1112.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
         fetute_seq_type.append(Calculate_All(sequence))
 
@@ -139,25 +139,26 @@ aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
 
 matrix = bl.BLOSUM(62)
 
-seq = list(s.parse("raw_data\\sequences\\all.fasta","fasta"))
+seq = list(s.parse("raw_data\\sequences\\T6SE_Training_Neg_1112.fasta","fasta"))
 
 
 def Calculate_Blosum_2():
-    ress = [[] for i in range(1250)]
+    ress = [[] for i in range(1112)]
     aa = 0
     for i in seq:
         for j in seq:
             alignments = aligner.align(i.seq, j.seq)
             alignment = alignments[0]
-            print("Score = %.1f" % alignment.score)
+            #print("Score = %.1f" % alignment.score)
             ress[aa].append(alignment.score)
         aa += 1
+        print(aa)
     return ress
 
 feture_evolv_type = Calculate_Blosum_2()
 
 pssm_matr = []
-with open("raw_data\\all_sorted_pssm_prof.csv") as pssm:
+with open("raw_data\\neg_sorted_pssm_prof.csv") as pssm:
     lis1 = [line.split(",") for line in pssm]
     for elem in lis1:
         elem = [float(x) for x in elem]
@@ -247,7 +248,7 @@ def Calculate_CTD(sequence):
 
 physico_chemical_type = []
 
-with open('raw_data\\sequences\\all.fasta') as fd:
+with open('raw_data\\sequences\\T6SE_Training_Neg_1112.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
         physico_chemical_type.append(Calculate_CTD(sequence))
 
@@ -262,7 +263,7 @@ for row in physico_chemical_type:
     prepared_features[i].extend(row)
     i += 1
     
-with open("prepared_data\\train_data_all.csv","w") as td:
+with open("prepared_data\\train_data_neg.csv","w") as td:
     csv_writer = csv.writer(td,delimiter = ",", lineterminator="\r")
     for line in prepared_features:
         csv_writer.writerow(line)
