@@ -121,7 +121,7 @@ def Calculate_All(sequence):
 
 
 fetute_seq_type = []
-with open('raw_data\\sequences\\T6SE_Training_Pos_138.fasta') as fd:
+with open('raw_data\\sequences\\test.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
         fetute_seq_type.append(Calculate_All(sequence))
-
+p = 0

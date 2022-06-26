@@ -1,3 +1,4 @@
+# sourcery skip: avoid-builtin-shadow
 import numpy as np
 import pandas
 from imblearn.over_sampling import SMOTE
@@ -88,9 +89,8 @@ for i in range(len(y_te)):
     if y_te[i] == 0:
         y_test[i][1] = 0
     if y_te[i] == 1:
-        y_test[i][0] = 0
-        
-        
+        y_test[i][0] = 0        
+
 print(2)
 
 print("Training Artificial Neural Network...")
@@ -126,18 +126,18 @@ y_train = y_t
 y_test = y_te
 
 print("Training Support Vector Machine...")
-clf1 = svm.SVC(decision_function_shape='ovr', kernel='linear', max_iter=1000)
+clf1 = svm.SVC(decision_function_shape='ovr', kernel='linear', max_iter=1000, probability=True)
 clf1.fit(X_train, y_train)
 y_pred = clf1.predict(X_test)
 results = cross_val_score(clf1, X_test, y_test, cv=10)
-SVM = clf1.predict(featurevector)
+SVM = clf1.predict_proba(featurevector)
 
 print("Training k-Nearest Neighbor ...")
 neigh = KNeighborsClassifier(n_neighbors=10)
 neigh.fit(X_train, y_train)
 results = cross_val_score(neigh, X_test, y_test, cv=10)
 y_pred = neigh.predict(X_test)
-KNN = neigh.predict(featurevector)
+KNN = neigh.predict_proba(featurevector)
 
 
 print("Training Naive Bayes...")
@@ -145,41 +145,26 @@ clf = MultinomialNB()
 clf.fit(X_train, y_train)
 results = cross_val_score(clf, X_test, y_test, cv=10)
 y_pred = clf.predict(X_test)
-DT = clf.predict(featurevector)
+DT = clf.predict_proba(featurevector)
 
 print("Training Random Forest...")
 rf = RandomForestClassifier(random_state=0, min_samples_leaf=100)
 rf.fit(X_train, y_train)
 results = cross_val_score(rf, X_test, y_test, cv=10)
 y_pred = rf.predict(X_test)
-RF = clf.predict(featurevector)
+RF = clf.predict_proba(featurevector)
 
-vote_result = [[0 for x in range(2)] for y in range(len(SVM))]
+vote_result = [[] for _ in range(len(SVM))]
 for i in range(len(ANN)):
-    if round(ANN[i][0]) == 1.0:
-        vote_result[i][0] = vote_result[i][0] + 1
-    if round(ANN[i][1]) == 1.0:
-        vote_result[i][1] = vote_result[i][1] + 1
-    if SVM[i] == 0:
-        vote_result[i][0] = vote_result[i][0] + 1
-    if SVM[i] == 1:
-        vote_result[i][1] = vote_result[i][1] + 1
-    if KNN[i] == 0:
-        vote_result[i][0] = vote_result[i][0] + 1
-    if KNN[i] == 1:
-        vote_result[i][1] = vote_result[i][1] + 1
-    if DT[i] == 0:
-        vote_result[i][0] = vote_result[i][0] + 1
-    if DT[i] == 1:
-        vote_result[i][1] = vote_result[i][1] + 1
-    if RF[i] == 0:
-        vote_result[i][0] = vote_result[i][0] + 1
-    if RF[i] == 1:
-        vote_result[i][1] = vote_result[i][1] + 1
+    vote_result[i].append(ANN[i][0])
+    vote_result[i].append(SVM[i][0])
+    vote_result[i].append(KNN[i][0])
+    vote_result[i].append(DT[i][0])
+    vote_result[i].append(RF[i][0])
 
 for i in range(len(ANN)):
-    if vote_result[i][0] >= vote_result[i][1]:
+    res = np.mean(vote_result[i])
+    if res >= 0.8:
         print('Sequence ', i + 1, ' is a probable Type 6 Effector')
     else:
         print('Sequence ', i + 1, ' is not a Type 6 Effector')
-

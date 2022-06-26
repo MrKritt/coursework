@@ -143,7 +143,7 @@ seq = list(s.parse("raw_data\\sequences\\T6SE_Training_Neg_1112.fasta","fasta"))
 
 
 def Calculate_Blosum_2():
-    ress = [[] for i in range(1112)]
+    ress = [[] for _ in range(1112)]
     aa = 0
     for i in seq:
         for j in seq:
@@ -194,9 +194,7 @@ def StringtoNum(ProteinSequence, aa_class):
     for k, m in list(aa_class.items()):
         for index in m:
             hard_protein_sequence = hard_protein_sequence.replace(index, k)
-    tprotein_sequence = hard_protein_sequence
-
-    return tprotein_sequence
+    return hard_protein_sequence
 
 def CalculateComposition(ProteinSequence, aa_class):
     tprotein_sequence = StringtoNum(ProteinSequence, aa_class)

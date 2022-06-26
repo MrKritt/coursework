@@ -10,24 +10,17 @@ matrix = bl.BLOSUM(62)
 
 seq = list(s.parse("raw_data\\sequences\\T6SE_Training_Pos_138.fasta","fasta"))
 
-#def Calculate_Blosum(sequence):
-#    res = []
-#    for i in sequence:
-#        for j in sequence:
-#            dipeptide = i + j
-#            res.append(matrix[dipeptide])
-#    return res
-
-ress = [[] for i in range(138)]
+ress = [[] for _ in range(138)]
 def Calculate_Blosum_2():
     aa = 0
     for i in seq:
         for j in seq:
             alignments = aligner.align(i.seq, j.seq)
             alignment = alignments[0]
-            print("Score = %.1f" % alignment.score)
+            #print("Score = %.1f" % alignment.score)
             ress[aa].append(alignment.score)
         aa += 1
+        print(aa)
     return ress
 
 feture_evolv_type = Calculate_Blosum_2()

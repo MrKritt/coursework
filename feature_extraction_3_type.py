@@ -26,9 +26,7 @@ def StringtoNum(ProteinSequence, aa_class):
     for k, m in list(aa_class.items()):
         for index in m:
             hard_protein_sequence = hard_protein_sequence.replace(index, k)
-    tprotein_sequence = hard_protein_sequence
-
-    return tprotein_sequence
+    return hard_protein_sequence
 
 def CalculateComposition(ProteinSequence, aa_class):
     tprotein_sequence = StringtoNum(ProteinSequence, aa_class)
