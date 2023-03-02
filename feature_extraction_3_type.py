@@ -1,8 +1,6 @@
 import copy
 from Bio.SeqIO import FastaIO
 
-
-
 Hydrophobicity = {"1": "RKEDQN", "2": "GASTPHY", "3": "CLVIMFW"}
 NormalizedVDWV = {"1": "GASTPDC", "2": "NVEQIL", "3": "MHKFRYW"}
 Polarity = {"1": "LIFWCMVY", "2": "PATGS", "3": "HQRKNED"}
@@ -30,22 +28,22 @@ def StringtoNum(ProteinSequence, aa_class):
 
 def CalculateComposition(ProteinSequence, aa_class):
     tprotein_sequence = StringtoNum(ProteinSequence, aa_class)
-    result = []
     num = len(tprotein_sequence)
-    result.append(round(float(tprotein_sequence.count("1")) / num, 3))
-    result.append(round(float(tprotein_sequence.count("2")) / num, 3))
-    result.append(round(float(tprotein_sequence.count("3")) / num, 3))
-    return result
+    return [
+        round(float(tprotein_sequence.count("1")) / num, 3),
+        round(float(tprotein_sequence.count("2")) / num, 3),
+        round(float(tprotein_sequence.count("3")) / num, 3),
+    ]
 
 def CalculateTransition(ProteinSequence, aa_class):
     tprotein_sequence = StringtoNum(ProteinSequence, aa_class)
-    result = []
     num = len(tprotein_sequence)
     ctd = tprotein_sequence
-    result.append(round(float(ctd.count("12") + ctd.count("21")) / (num - 1), 3))
-    result.append(round(float(ctd.count("13") + ctd.count("31")) / (num - 1), 3))
-    result.append(round(float(ctd.count("23") + ctd.count("32")) / (num - 1), 3))
-    return result
+    return [
+        round(float(ctd.count("12") + ctd.count("21")) / (num - 1), 3),
+        round(float(ctd.count("13") + ctd.count("31")) / (num - 1), 3),
+        round(float(ctd.count("23") + ctd.count("32")) / (num - 1), 3),
+    ]
 
 def CalculateC(ProteinSequence):
     result = []

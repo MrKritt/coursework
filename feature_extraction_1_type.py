@@ -125,3 +125,4 @@ with open('raw_data\\sequences\\test.fasta') as fd:
     for name, sequence in FastaIO.SimpleFastaParser(fd):
         fetute_seq_type.append(Calculate_All(sequence))
 p = 0
+
